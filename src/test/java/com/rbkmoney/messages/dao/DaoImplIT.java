@@ -6,6 +6,7 @@ import com.rbkmoney.messages.domain.Conversation;
 import com.rbkmoney.messages.domain.ConversationStatus;
 import com.rbkmoney.messages.domain.Message;
 import com.rbkmoney.messages.domain.User;
+import com.rbkmoney.messages.exception.DaoException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -62,7 +63,7 @@ public class DaoImplIT extends AbstractIT {
         Assert.assertTrue(messagesFound.containsAll(messages));
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test(expected = DaoException.class)
     public void usersConstraintViolation() {
         conversationDao.saveAll(List.of(TestData.createConversation("1", ConversationStatus.ACTUAL)));
 
@@ -73,7 +74,7 @@ public class DaoImplIT extends AbstractIT {
         messageDao.saveAll(messages);
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test(expected = DaoException.class)
     public void conversationsConstraintViolation() {
         userDao.saveAll(List.of(TestData.createUser("1")));
 

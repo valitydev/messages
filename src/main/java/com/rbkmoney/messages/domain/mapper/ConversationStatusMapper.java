@@ -11,7 +11,7 @@ public class ConversationStatusMapper {
             case OUTDATED:
                 return ConversationStatus.OUTDATED;
             default:
-                throw new RuntimeException("It's not possible to have this situation");
+                throw new IllegalStateException("Unknown status: " + conversationStatusThrift);
         }
     }
 
@@ -22,7 +22,7 @@ public class ConversationStatusMapper {
             case OUTDATED:
                 return com.rbkmoney.damsel.messages.ConversationStatus.OUTDATED;
             default:
-                throw new RuntimeException("It's not possible to have this situation");
+                throw new IllegalStateException("Unknown status: " + conversationStatus);
         }
     }
 }
