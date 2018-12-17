@@ -11,7 +11,7 @@ public class ConversationStatusMapper {
             case OUTDATED:
                 return ConversationStatus.OUTDATED;
             default:
-                return ConversationStatus.ACTUAL; // лучше перестраховаться и показывать всё
+                throw new RuntimeException("It's not possible to have this situation");
         }
     }
 
