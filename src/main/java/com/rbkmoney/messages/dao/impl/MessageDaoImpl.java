@@ -11,8 +11,9 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Component
@@ -34,7 +35,7 @@ public class MessageDaoImpl implements MessageDao {
             updateCounts = jdbcTemplate.batchUpdate(insertSql, messages, daoHelper.batchSize, (ps, argument) -> {
                 ps.setString(1, argument.getId());
                 ps.setString(2, argument.getText());
-                ps.setTimestamp(3, Timestamp.from(argument.getCreatedDate()));
+                ps.setObject(3, LocalDateTime.ofInstant(argument.getCreatedDate(), ZoneOffset.UTC));
                 ps.setString(4, argument.getConversationId());
                 ps.setString(5, argument.getUserId());
             });
@@ -60,7 +61,8 @@ public class MessageDaoImpl implements MessageDao {
         public Message mapRow(ResultSet rs, int i) throws SQLException {
             String id = rs.getString("id");
             String text = rs.getString("text");
-            Instant createdDate = rs.getTimestamp("created_date").toInstant();
+            Instant createdDate = rs.getObject("created_date", LocalDateTime.class)
+                    .toInstant(ZoneOffset.UTC);
             String conversationId = rs.getString("conversation_id");
             String userId = rs.getString("user_id");
             return new Message(id, text, createdDate, conversationId, userId);
