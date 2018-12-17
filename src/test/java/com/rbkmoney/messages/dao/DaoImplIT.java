@@ -4,6 +4,7 @@ import com.rbkmoney.messages.AbstractIT;
 import com.rbkmoney.messages.TestData;
 import com.rbkmoney.messages.domain.Conversation;
 import com.rbkmoney.messages.domain.ConversationStatus;
+import com.rbkmoney.messages.domain.Message;
 import com.rbkmoney.messages.domain.User;
 import org.junit.After;
 import org.junit.Assert;
@@ -41,22 +42,22 @@ public class DaoImplIT extends AbstractIT {
 
         User user = TestData.createUser("1");
         userDao.saveAll(List.of(user));
-        var users = userDao.findAllById(List.of("1"));
+        List<User> users = userDao.findAllById(List.of("1"));
         Assert.assertEquals(1, users.size());
         Assert.assertEquals(user, users.get(0));
 
         Conversation conversation = TestData.createConversation("1", ConversationStatus.ACTUAL);
         conversationDao.saveAll(List.of(conversation));
-        var conversations = conversationDao.findAllById(List.of("1"));
+        List<Conversation> conversations = conversationDao.findAllById(List.of("1"));
         Assert.assertEquals(1, conversations.size());
         Assert.assertEquals(conversation, conversations.get(0));
 
-        var messages = TestData.createMessages(List.of(
+        List<Message> messages = TestData.createMessages(List.of(
                 Pair.of("1", "1"),
                 Pair.of("2", "1")
         ), "1");
         messageDao.saveAll(messages);
-        var messagesFound = messageDao.findAllByConversationId(List.of("1"));
+        List<Message> messagesFound = messageDao.findAllByConversationId(List.of("1"));
         Assert.assertEquals(2, messagesFound.size());
         Assert.assertTrue(messagesFound.containsAll(messages));
     }
@@ -65,7 +66,7 @@ public class DaoImplIT extends AbstractIT {
     public void usersConstraintViolation() {
         conversationDao.saveAll(List.of(TestData.createConversation("1", ConversationStatus.ACTUAL)));
 
-        var messages = TestData.createMessages(List.of(
+        List<Message> messages = TestData.createMessages(List.of(
                 Pair.of("1", "1"),
                 Pair.of("2", "1")
         ), "1");
@@ -76,7 +77,7 @@ public class DaoImplIT extends AbstractIT {
     public void conversationsConstraintViolation() {
         userDao.saveAll(List.of(TestData.createUser("1")));
 
-        var messages = TestData.createMessages(List.of(
+        List<Message> messages = TestData.createMessages(List.of(
                 Pair.of("1", "1"),
                 Pair.of("2", "1")
         ), "1");

@@ -30,16 +30,16 @@ public class MessagesService implements MessageServiceSrv.Iface {
     @Override
     public GetConversationResponse getConversations(List<String> conversationIds, ConversationFilter conversationFilter)
             throws TException {
-        var conversations = conversationDao.findAllById(conversationIds);
+        List<com.rbkmoney.messages.domain.Conversation> conversations = conversationDao.findAllById(conversationIds);
 
         checkAllConversationsFound(conversations, conversationIds);
 
         if (conversationFilter != null && conversationFilter.isSetConversationStatus()) {
-            var conversationStatus = fromThrift(conversationFilter.getConversationStatus());
+            com.rbkmoney.messages.domain.ConversationStatus conversationStatus = fromThrift(conversationFilter.getConversationStatus());
             conversations.removeIf(conversation -> !conversation.getStatus().equals(conversationStatus));
         }
         conversations = enrichWithMessages(conversations, conversationIds);
-        var users = getUsers(conversations);
+        List<com.rbkmoney.messages.domain.User> users = getUsers(conversations);
 
         return convertToResponse(conversations, users);
     }
@@ -47,11 +47,11 @@ public class MessagesService implements MessageServiceSrv.Iface {
     @Override
     @Transactional
     public void saveConversations(List<Conversation> conversationsThrift, List<User> users) throws TException {
-        var conversations = conversationsThrift.stream()
+        List<com.rbkmoney.messages.domain.Conversation> conversations = conversationsThrift.stream()
                 .map(ConversationMapper::fromThrift)
                 .collect(Collectors.toList());
 
-        var messages = conversations.stream()
+        List<Message> messages = conversations.stream()
                 .flatMap(conversation -> conversation.getMessages().stream())
                 .collect(Collectors.toList());
 
@@ -93,16 +93,16 @@ public class MessagesService implements MessageServiceSrv.Iface {
 
 
     private void checkAllUsersProvided(List<Message> messages, List<User> users) throws UsersNotProvided {
-        var messagesUserIds = messages.stream()
+        List<String> messagesUserIds = messages.stream()
                 .map(Message::getUserId)
                 .distinct()
                 .collect(Collectors.toList());
 
-        var providedUserIds = users.stream()
+        List<String> providedUserIds = users.stream()
                 .map(User::getUserId)
                 .collect(Collectors.toList());
 
-        var notFoundIds = ListUtils.removeAll(messagesUserIds, providedUserIds);
+        List<String> notFoundIds = ListUtils.removeAll(messagesUserIds, providedUserIds);
         if (!notFoundIds.isEmpty()) {
             throw new UsersNotProvided(notFoundIds);
         }
@@ -114,11 +114,11 @@ public class MessagesService implements MessageServiceSrv.Iface {
             return;
         }
 
-        var foundIds = conversations.stream()
+        List<String> foundIds = conversations.stream()
                 .map(com.rbkmoney.messages.domain.Conversation::getId)
                 .collect(Collectors.toList());
 
-        var notFoundIds = ListUtils.removeAll(conversationIds, foundIds);
+        List<String> notFoundIds = ListUtils.removeAll(conversationIds, foundIds);
 
         throw new ConversationsNotFound(notFoundIds);
     }

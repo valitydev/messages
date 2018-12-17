@@ -37,7 +37,7 @@ public class MessagesServiceTest {
         givenUsers();
         givenMessages();
 
-        var ids = List.of("1", "2", "3", "4");
+        List<String> ids = List.of("1", "2", "3", "4");
         GetConversationResponse response = messagesService.getConversations(ids, null);
 
         Assert.assertEquals(ids.size(), response.getConversations().size());
@@ -51,7 +51,7 @@ public class MessagesServiceTest {
         givenMessages();
 
         String cannotBeFound = "CannotBeFound";
-        var idsWithNotFound = List.of("1", "2", "3", "4", cannotBeFound);
+        List<String> idsWithNotFound = List.of("1", "2", "3", "4", cannotBeFound);
 
         try {
             messagesService.getConversations(idsWithNotFound, null);
