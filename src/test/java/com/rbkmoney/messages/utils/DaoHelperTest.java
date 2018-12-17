@@ -17,6 +17,7 @@ public class DaoHelperTest {
     @Test
     public void collectToIdsCollection() {
         Assert.assertEquals("('1', '2', '3')", daoHelper.collectToIdsCollection(List.of("1", "2", "3")));
+        Assert.assertEquals("('')", daoHelper.collectToIdsCollection(List.of()));
     }
 
     @Test(expected = DaoException.class)
