@@ -15,9 +15,9 @@ import org.springframework.data.relational.core.mapping.Table;
 public class User {
 
     @Id
-    String id;
+    private String id;
 
-    String email;
+    private String email;
 
-    String fullName;
+    private String fullName;
 }

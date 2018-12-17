@@ -16,12 +16,12 @@ import java.util.List;
 public class Conversation {
 
     @Id
-    String id;
+    private String id;
 
     @Builder.Default
-    List<Message> messages = new ArrayList<>();
+    private List<Message> messages = new ArrayList<>();
 
-    ConversationStatus status;
+    private ConversationStatus status;
 
     public Conversation withMessages(List<Message> messages) {
         this.setMessages(messages);

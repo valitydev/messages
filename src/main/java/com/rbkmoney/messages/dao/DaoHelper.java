@@ -1,15 +1,19 @@
-package com.rbkmoney.messages.utils;
+package com.rbkmoney.messages.dao;
 
 import com.rbkmoney.messages.exception.DaoException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DaoUtils {
+@Component
+public class DaoHelper {
 
-    public static final int BATCH_SIZE = 1000;
+    @Value("${messages.db.batch-size:1000}")
+    public Integer batchSize;
 
-    public static void checkUpdateRowsSuccess(int[][] updateCounts) throws DaoException {
+    public void checkUpdateRowsSuccess(int[][] updateCounts) throws DaoException {
         boolean checked = false;
         for (int[] updateCountArray : updateCounts) {
             for (int updateCount : updateCountArray) {
@@ -24,8 +28,7 @@ public class DaoUtils {
         }
     }
 
-
-    public static String collectToIdsCollection(List<String> ids) {
+    public String collectToIdsCollection(List<String> ids) {
         return ids.stream().collect(Collectors.joining("', '", "('", "')"));
     }
 

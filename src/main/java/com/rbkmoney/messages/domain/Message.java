@@ -15,15 +15,15 @@ import java.time.Instant;
 public class Message {
 
     @Id
-    String id;
+    private String id;
 
-    String text;
+    private String text;
 
-    Instant createdDate;
+    private Instant createdDate;
 
-    String conversationId;
+    private String conversationId;
 
-    String userId;
+    private String userId;
 
     public Message withConversationId(String conversationId) {
         this.setConversationId(conversationId);

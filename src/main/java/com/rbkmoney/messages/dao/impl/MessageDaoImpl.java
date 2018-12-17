@@ -1,5 +1,6 @@
 package com.rbkmoney.messages.dao.impl;
 
+import com.rbkmoney.messages.dao.DaoHelper;
 import com.rbkmoney.messages.dao.MessageDao;
 import com.rbkmoney.messages.domain.Message;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +14,12 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
-import static com.rbkmoney.messages.utils.DaoUtils.*;
-
 @Component
 @RequiredArgsConstructor
 public class MessageDaoImpl implements MessageDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final DaoHelper daoHelper;
 
     private final MessageRowMapper rowMapper = new MessageRowMapper();
 
@@ -29,20 +29,20 @@ public class MessageDaoImpl implements MessageDao {
                 "VALUES (?, ?, ?, ?, ?) " +
                 "ON CONFLICT (id) DO NOTHING;"; // immutable messages history!
 
-        int[][] updateCounts = jdbcTemplate.batchUpdate(insertSql, messages, BATCH_SIZE, (ps, argument) -> {
+        int[][] updateCounts = jdbcTemplate.batchUpdate(insertSql, messages, daoHelper.batchSize, (ps, argument) -> {
             ps.setString(1, argument.getId());
             ps.setString(2, argument.getText());
             ps.setTimestamp(3, Timestamp.from(argument.getCreatedDate()));
             ps.setString(4, argument.getConversationId());
             ps.setString(5, argument.getUserId());
         });
-        checkUpdateRowsSuccess(updateCounts);
+        daoHelper.checkUpdateRowsSuccess(updateCounts);
     }
 
     @Override
     public List<Message> findAllByConversationId(List<String> conversationIds) {
         String selectSql = "SELECT id, text, created_date, conversation_id, user_id FROM msgs.message " +
-                "WHERE conversation_id in " + collectToIdsCollection(conversationIds);
+                "WHERE conversation_id in " + daoHelper.collectToIdsCollection(conversationIds);
 
         return jdbcTemplate.query(selectSql, rowMapper);
     }

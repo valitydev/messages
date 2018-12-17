@@ -65,9 +65,18 @@ public class MessagesService implements MessageServiceSrv.Iface {
 
     private GetConversationResponse convertToResponse(List<com.rbkmoney.messages.domain.Conversation> conversations,
                                                       List<com.rbkmoney.messages.domain.User> users) {
+        List<Conversation> conversationsList = conversations.stream()
+                .map(ConversationMapper::toThrift)
+                .collect(Collectors.toList());
+        Map<String, User> idsUsersMap = users.stream()
+                .map(UserMapper::toThrift)
+                .collect(Collectors.toMap(
+                        User::getUserId,
+                        user -> user)
+                );
         return new GetConversationResponse(
-                conversations.stream().map(ConversationMapper::toThrift).collect(Collectors.toList()),
-                users.stream().map(UserMapper::toThrift).collect(Collectors.toMap(User::getUserId, user -> user)));
+                conversationsList,
+                idsUsersMap);
     }
 
     private List<com.rbkmoney.messages.domain.User> getUsers(
@@ -101,8 +110,9 @@ public class MessagesService implements MessageServiceSrv.Iface {
 
     private void checkAllConversationsFound(List<com.rbkmoney.messages.domain.Conversation> conversations,
                                             List<String> conversationIds) throws ConversationsNotFound {
-        if (conversations.size() == conversationIds.size())
+        if (conversations.size() == conversationIds.size()) {
             return;
+        }
 
         var foundIds = conversations.stream()
                 .map(com.rbkmoney.messages.domain.Conversation::getId)

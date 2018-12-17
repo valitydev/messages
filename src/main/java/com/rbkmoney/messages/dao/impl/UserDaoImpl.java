@@ -1,5 +1,6 @@
 package com.rbkmoney.messages.dao.impl;
 
+import com.rbkmoney.messages.dao.DaoHelper;
 import com.rbkmoney.messages.dao.UserDao;
 import com.rbkmoney.messages.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -11,13 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import static com.rbkmoney.messages.utils.DaoUtils.*;
-
 @Component
 @RequiredArgsConstructor
 public class UserDaoImpl implements UserDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final DaoHelper daoHelper;
 
     private final UserRowMapper rowMapper = new UserRowMapper();
 
@@ -27,18 +27,18 @@ public class UserDaoImpl implements UserDao {
                 "ON CONFLICT (id) DO " +
                 "UPDATE set email = excluded.email, full_name = excluded.full_name;";
 
-        int[][] updateCounts = jdbcTemplate.batchUpdate(upsertSql, users, BATCH_SIZE, (ps, argument) -> {
+        int[][] updateCounts = jdbcTemplate.batchUpdate(upsertSql, users, daoHelper.batchSize, (ps, argument) -> {
             ps.setString(1, argument.getId());
             ps.setString(2, argument.getEmail());
             ps.setString(3, argument.getFullName());
         });
-        checkUpdateRowsSuccess(updateCounts);
+        daoHelper.checkUpdateRowsSuccess(updateCounts);
     }
 
     @Override
     public List<User> findAllById(List<String> ids) {
         String selectSql = "SELECT id, email, full_name FROM msgs.author " +
-                "WHERE id in " + collectToIdsCollection(ids);
+                "WHERE id in " + daoHelper.collectToIdsCollection(ids);
 
         return jdbcTemplate.query(selectSql, rowMapper);
     }
