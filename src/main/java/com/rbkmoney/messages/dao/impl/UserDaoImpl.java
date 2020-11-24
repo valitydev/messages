@@ -4,7 +4,6 @@ import com.rbkmoney.messages.dao.UserDao;
 import com.rbkmoney.messages.domain.User;
 import com.rbkmoney.messages.exception.DaoException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -46,17 +45,15 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void save(User user) throws DaoException {
-        String insertSql = "INSERT INTO msgs.author(id, email, full_name) VALUES (?, ?, ?) " +
+        String insertSql = "INSERT INTO msgs.author(id, email, full_name) VALUES (:id, :email, :full_name) " +
                 "ON CONFLICT (id) DO " +
                 "UPDATE set email = excluded.email, full_name = excluded.full_name";
         try {
-            jdbcTemplate.execute(insertSql, (PreparedStatementCallback<Boolean>) ps -> {
-                ps.setString(1, user.getId());
-                ps.setString(2, user.getEmail());
-                ps.setString(3, user.getFullName());
+            jdbcTemplate.update(insertSql, new MapSqlParameterSource()
+                    .addValue("id", user.getId())
+                    .addValue("email", user.getEmail())
+                    .addValue("full_name", user.getFullName()).getValues());
 
-                return ps.execute();
-            });
         } catch (Exception ex) {
             throw new DaoException(ex);
         }
