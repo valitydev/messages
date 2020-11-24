@@ -19,7 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.Collections;
 import java.util.List;
 
-public class DaoImplIT extends AbstractIT {
+public class DaoImplTest extends AbstractIT {
 
     @Autowired
     UserDao userDao;

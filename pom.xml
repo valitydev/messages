@@ -56,7 +56,7 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>messages-proto</artifactId>
-            <version>1.10-391d225</version>
+            <version>1.13-a177efb</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
