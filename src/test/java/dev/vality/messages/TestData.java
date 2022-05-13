@@ -8,6 +8,7 @@ import dev.vality.messages.domain.User;
 import org.springframework.data.util.Pair;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,7 +54,9 @@ public class TestData {
     }
 
     public static Message createMessage(String id, String conversationId, String userId) {
-        return new Message(id, "bla-bla-bla", Instant.now(), conversationId, userId);
+        return new Message(
+                id, "bla-bla-bla", Instant.now().truncatedTo(ChronoUnit.SECONDS), conversationId, userId
+        );
     }
 
     public static User createUser(String id) {
