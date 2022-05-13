@@ -9,6 +9,7 @@ import dev.vality.messages.domain.User;
 import dev.vality.messages.exception.DaoException;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -31,7 +32,7 @@ public class DaoImplTest extends AbstractIT {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    @After
+    @Before
     public void cleanup() {
         jdbcTemplate.update("DELETE FROM msgs.message");
         jdbcTemplate.update("DELETE FROM msgs.author");
