@@ -133,7 +133,10 @@ public class MessagesService implements MessageServiceSrv.Iface {
                 .collect(Collectors.groupingBy(Message::getConversationId));
         return conversations.stream()
                 .map(conversation ->
-                        conversation.withMessages(conversationIdsMessages.getOrDefault(conversation.getId(), List.of())))
+                        conversation.withMessages(
+                                conversationIdsMessages.getOrDefault(conversation.getId(), List.of())
+                        )
+                )
                 .collect(Collectors.toList());
     }
 

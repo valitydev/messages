@@ -4,7 +4,8 @@ import dev.vality.messages.domain.ConversationStatus;
 
 public class ConversationStatusMapper {
 
-    public static ConversationStatus fromThrift(dev.vality.damsel.messages.ConversationStatus conversationStatusThrift) {
+    public static ConversationStatus fromThrift(
+            dev.vality.damsel.messages.ConversationStatus conversationStatusThrift) {
         switch (conversationStatusThrift) {
             case ACTUAL:
                 return ConversationStatus.ACTUAL;
