@@ -61,7 +61,7 @@ public class DaoImplTest extends AbstractIT {
         messageDao.saveAll(messages);
         List<Message> messagesFound = messageDao.findAllByConversationId(List.of("1"));
         Assert.assertEquals(2, messagesFound.size());
-        Assert.assertTrue(messagesFound.containsAll(messages));
+        Assert.assertArrayEquals(messages.toArray(), messagesFound.toArray());
     }
 
     @Test(expected = DaoException.class)
