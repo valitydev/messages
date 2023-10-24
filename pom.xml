@@ -19,6 +19,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <shared-resources.version>2.0.3</shared-resources.version>
         <server.port>8022</server.port>
         <exposed.ports>${server.port}</exposed.ports>
         <db.host.name>localhost</db.host.name>
@@ -67,6 +68,7 @@
         <dependency>
             <groupId>dev.vality.woody</groupId>
             <artifactId>woody-thrift</artifactId>
+            <version>[1.0.23,)</version>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
